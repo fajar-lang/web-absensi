@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- ...dashboard cards... -->
+
+<!-- Contoh tabel data absen untuk admin/dashboard -->
+<div class="card p-2">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Tanggal</th>
+                    <th>Waktu</th>
+                    <th>Lokasi</th>
+                    {% if session.get('admin') %}
+                    <th class="text-end">Aksi</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in absensi %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ a.nama }}</td>
+                    <td>{{ a.tanggal }}</td>
+                    <td>{{ a.waktu }}</td>
+                    <td>{{ a.lokasi }}</td>
+                    {% if session.get('admin') %}
+                    <td class="text-end">
+                        <form action="{{ url_for('hapus_absen', absen_id=a.id) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus?')">
+                                <i class="fas fa-trash me-1"></i>Hapus
+                            </button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+function openMapModal(lokasi) {
+    let [lat, lon] = lokasi.split(',').map(Number);
+    var modal = new bootstrap.Modal(document.getElementById('mapModal'));
+    modal.show();
+    setTimeout(function() { // Wait for modal to be visible
+        if (window.adminMap) {
+            adminMap.setView([lat, lon], 16);
+            if (window.adminMarker) adminMarker.setLatLng([lat, lon]);
+            else window.adminMarker = L.marker([lat, lon]).addTo(adminMap);
+        } else {
+            window.adminMap = L.map('previewMap').setView([lat, lon], 16);
+            window.adminMarker = L.marker([lat, lon]).addTo(adminMap);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(adminMap);
+        }
+        setTimeout(function() { adminMap.invalidateSize(); }, 250);
+    }, 350);
+}
+</script>
+{% endblock %}
