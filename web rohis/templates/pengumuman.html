@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Pengumuman</h3>
+{% if session.get('admin') %}
+<form method="post" class="mb-4">
+    <div class="mb-2">
+        <input type="text" name="judul" class="form-control" placeholder="Judul" required>
+    </div>
+    <div class="mb-2">
+        <textarea name="isi" class="form-control" placeholder="Isi pengumuman" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Tambah Pengumuman</button>
+</form>
+{% endif %}
+<ul class="list-group">
+    {% for p in data %}
+    <li class="list-group-item">
+        <strong>{{ p.judul }}</strong> <span class="text-muted">({{ p.tanggal }})</span>
+        <div>{{ p.isi }}</div>
+    </li>
+    {% endfor %}
+</ul>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('kultum') }}">Kultum</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('pengumuman') }}">Pengumuman</a>
+</li>
+{% endblock %}

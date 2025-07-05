@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Data Keuangan ROHIS</h4>
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h6>Total Saldo</h6>
+                        <h4>Rp {{ "{:,.0f}".format(saldo) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h6>Total Pemasukan</h6>
+                        <h4>Rp {{ "{:,.0f}".format(total_masuk) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <h6>Total Pengeluaran</h6>
+                        <h4>Rp {{ "{:,.0f}".format(total_keluar) }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Keterangan</th>
+                        <th>Jenis</th>
+                        <th class="text-end">Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in data %}
+                    <tr>
+                        <td>{{ d.tanggal }}</td>
+                        <td>{{ d.keterangan }}</td>
+                        <td>{{ d.jenis }}</td>
+                        <td class="text-end">Rp {{ "{:,.0f}".format(d.jumlah) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='img/logo_rohis.png') }}" alt="Logo ROHIS" class="mb-3" style="height:70px;">
+                    <h2 class="arabic-text mb-2">السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</h2>
+                    <h3 class="mb-3">Absensi ROHIS</h3>
+                    <p class="text-muted">Silakan isi absensi kehadiran Anda</p>
+                </div>
+                <form method="post" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" name="nama" class="form-control" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kegiatan</label>
+                        <select name="kegiatan_id" class="form-control" required>
+                            <option value="">-- Pilih Kegiatan --</option>
+                            {% for keg in kegiatan_list %}
+                            <option value="{{ keg.id }}">{{ keg.nama }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lokasi (Otomatis)</label>
+                        <input type="hidden" id="lokasi" name="lokasi" required>
+                        <div id="lokasi-status" class="form-text text-success"></div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-check-circle me-2"></i>Kirim Absen
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <p class="arabic-text">اَللّٰهُمَّ يَسِّرْ وَلاَ تُعَسِّرْ</p>
+            <p class="text-muted">Ya Allah, permudahkanlah dan jangan persulit</p>
+        </div>
+    </div>
+</div>
+<script>
+window.onload = function() {
+    var lokasiInput = document.getElementById('lokasi');
+    var statusDiv = document.getElementById('lokasi-status');
+    if (navigator.geolocation) {
+        statusDiv.innerText = "Mengambil lokasi...";
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            lokasiInput.value = pos.coords.latitude + "," + pos.coords.longitude;
+            statusDiv.innerText = "Lokasi berhasil diambil.";
+        }, function(err) {
+            statusDiv.innerText = "Gagal mengambil lokasi: " + err.message;
+            lokasiInput.value = "";
+        });
+    } else {
+        statusDiv.innerText = "Browser tidak mendukung GPS.";
+        lokasiInput.value = "";
+    }
+};
+</script>
+{% endblock %}
+
+{% block head %}
+<style>
+.card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+    backdrop-filter: blur(10px);
+    border: none;
+    margin-top: 2rem;
+}
+.islamic-ornament {
+    font-size: 3em;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+.arabic-text {
+    font-size: 1.5em;
+    color: var(--primary-color);
+}
+</style>
+{% endblock %}
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('pengumuman_anggota') }}">Pengumuman</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('kultum_anggota') }}">Kultum</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('kegiatan_anggota') }}">Kegiatan</a>
+</li>

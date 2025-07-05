@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Daftar Anggota</h3>
+<form method="post" class="row g-2 mb-3">
+    <div class="col-md-5">
+        <input type="text" name="nama" class="form-control" placeholder="Nama Anggota" required>
+    </div>
+    <div class="col-md-3">
+        <input type="text" name="kelas" class="form-control" placeholder="Kelas">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-success w-100">Tambah</button>
+    </div>
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>Kelas</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in data %}
+        <tr>
+            <td>{{ a.nama }}</td>
+            <td>{{ a.kelas }}</td>
+            <td>
+                <a href="{{ url_for('edit_anggota', id=a.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                <form action="{{ url_for('delete_anggota', id=a.id) }}" method="post" class="d-inline" onsubmit="return confirm('Yakin hapus?')">
+                    <button class="btn btn-sm btn-danger">Hapus</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

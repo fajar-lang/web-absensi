@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Data Pembayaran Kas</h3>
+{% if session.get('admin') %}
+<div class="mb-4">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahKasModal">
+        <i class="fas fa-plus-circle me-2"></i>Tambah Pembayaran
+    </button>
+</div>
+{% endif %}
+
+<div class="card p-2">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Tanggal Bayar</th>
+                    <th>Jumlah</th>
+                    {% if session.get('admin') %}
+                    <th class="text-end">Aksi</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for k in kas_data %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ k.catatan }}</td>
+                    <td>{{ k.tanggal }}</td>
+                    <td>Rp {{ "{:,.0f}".format(k.jumlah) }}</td>
+                    {% if session.get('admin') %}
+                    <td class="text-end">
+                        <form action="{{ url_for('hapus_kas', kas_id=k.id) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus?')">
+                                <i class="fas fa-trash me-1"></i>Hapus
+                            </button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if session.get('admin') %}
+<!-- Modal Tambah Kas -->
+<div class="modal fade" id="tambahKasModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Pembayaran Kas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama</label>
+                        <input type="text" name="nama" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" name="tanggal" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah</label>
+                        <input type="number" name="jumlah" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

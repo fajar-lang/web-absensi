@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- ...konten dashboard... -->
+<div id="absenMap" style="height: 400px;"></div>
+
+<h5 class="mt-4">Daftar Anggota yang Pernah Absen</h5>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>Kegiatan</th>
+            <th>Tanggal</th>
+            <th>Waktu</th>
+            <th>Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for absen in absensi %}
+        <tr>
+            <td>{{ absen.nama }}</td>
+            <td>{{ absen.kegiatan.nama if absen.kegiatan else '-' }}</td>
+            <td>{{ absen.tanggal }}</td>
+            <td>{{ absen.waktu }}</td>
+            <td>
+                {% if absen.lokasi and absen.kegiatan and absen.kegiatan.lokasi %}
+                    {% set lat1, lon1 = absen.lokasi.split(',') %}
+                    {% set lat2, lon2 = absen.kegiatan.lokasi.split(',') %}
+                    {% set jarak = (lat1|float - lat2|float)**2 + (lon1|float - lon2|float)**2 %}
+                    {% if jarak < 0.0001 %}
+                        <span class="badge bg-success">Hadir</span>
+                    {% else %}
+                        <span class="badge bg-danger">Tidak Hadir</span>
+                    {% endif %}
+                {% else %}
+                    <span class="badge bg-secondary">-</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

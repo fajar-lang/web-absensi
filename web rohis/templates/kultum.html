@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Kultum</h3>
+{% if session.get('admin') %}
+<form method="post" class="mb-4">
+    <div class="mb-2">
+        <input type="text" name="judul" class="form-control" placeholder="Judul" required>
+    </div>
+    <div class="mb-2">
+        <textarea name="isi" class="form-control" placeholder="Isi kultum" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Tambah Kultum</button>
+</form>
+{% endif %}
+<ul class="list-group">
+    {% for k in data %}
+    <li class="list-group-item">
+        <strong>{{ k.judul }}</strong> <span class="text-muted">({{ k.tanggal }})</span>
+        <div>{{ k.isi }}</div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

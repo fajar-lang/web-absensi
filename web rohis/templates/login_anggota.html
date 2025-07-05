@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <div class="text-center mb-3">
+                <img src="{{ url_for('static', filename='img/logo_rohis.png') }}" alt="Logo ROHIS" class="mb-3" style="height:70px;">
+                <h3>Login Anggota ROHIS</h3>
+            </div>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" name="nama" class="form-control" required autofocus>
+                </div>
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Daftar Kegiatan</h3>
+{% if session.get('admin') %}
+<form method="post" action="{{ url_for('kegiatan') }}" class="mb-4">
+    <div class="mb-2">
+        <input type="text" name="nama" class="form-control" placeholder="Nama Kegiatan" required>
+    </div>
+    <div class="mb-2">
+        <input type="text" id="lokasi_kegiatan" name="lokasi" class="form-control" placeholder="Lokasi Kegiatan (otomatis)" required readonly>
+        <button type="button" class="btn btn-sm btn-primary mt-2" onclick="ambilLokasiKegiatan()">Ambil Lokasi Kegiatan</button>
+        <div id="status-lokasi-kegiatan" class="form-text text-success"></div>
+    </div>
+    <button type="submit" class="btn btn-success">Tambah Kegiatan</button>
+</form>
+<script>
+function ambilLokasiKegiatan() {
+    var lokasiInput = document.getElementById('lokasi_kegiatan');
+    var statusDiv = document.getElementById('status-lokasi-kegiatan');
+    if (navigator.geolocation) {
+        statusDiv.innerText = "Mengambil lokasi...";
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            lokasiInput.value = pos.coords.latitude + "," + pos.coords.longitude;
+            statusDiv.innerText = "Lokasi berhasil diambil.";
+        }, function(err) {
+            statusDiv.innerText = "Gagal mengambil lokasi: " + err.message;
+            lokasiInput.value = "";
+        });
+    } else {
+        statusDiv.innerText = "Browser tidak mendukung GPS.";
+        lokasiInput.value = "";
+    }
+}
+</script>
+{% endif %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nama Kegiatan</th>
+            <th>Lokasi</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in data %}
+        <tr>
+            <td>{{ k.nama }}</td>
+            <td>{{ k.lokasi }}</td>
+            <td>
+                {% if k.status == 'aktif' %}
+                    <span class="badge bg-success">Aktif</span>
+                {% else %}
+                    <span class="badge bg-secondary">Nonaktif</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if k.status == 'aktif' %}
+                <form action="{{ url_for('nonaktifkan_kegiatan', id=k.id) }}" method="post" class="d-inline">
+                    <button class="btn btn-warning btn-sm" onclick="return confirm('Nonaktifkan kegiatan ini?')">Nonaktifkan</button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('aktifkan_kegiatan', id=k.id) }}" method="post" class="d-inline">
+                    <button class="btn btn-success btn-sm" onclick="return confirm('Aktifkan kegiatan ini?')">Aktifkan</button>
+                </form>
+                {% endif %}
+                <form action="{{ url_for('hapus_kegiatan', id=k.id) }}" method="post" class="d-inline">
+                    <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus kegiatan ini?')">Hapus</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-muted">Belum ada kegiatan.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
